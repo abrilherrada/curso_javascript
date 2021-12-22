@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://kit.fontawesome.com/988d6777a5.js" crossorigin="anonymous"></script>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Toys 4 paws - Dog accessories</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Tenor+Sans&display=swap" rel="stylesheet">
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="./styles/bootstrap.css" rel="stylesheet" />
+        <link href="./styles/main.css" rel="stylesheet">
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#"><img src="./media/logo.png" alt="inicio" class="logo"></a>
+                <h1 class="visually-hidden">Toys 4 paws</h1>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contacto</a></li>
+                    </ul>
+                    <form class="d-flex">
+                        <button class="btn btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi-cart-fill me-1"></i>
+                            Carrito
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- Cart modal-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tu carrito</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="cartSummary" class="modal-body">
+                        <p>Todavía no agregaste productos a tu carrito.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark">Pagar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero-->
+        <header class="container-fluid d-flex justify-content-start align-items-center w-100 hero">
+            <div class="row">
+                <div class="hero__container">
+                    <h2 class="hero__title">Lo mejor para tu mejor amigo</h2>
+                </div>
+            </div>
+        </header>
+        <!-- Section 1: Products-->
+        <section class="py-5">
+            <h2 class="product-title">Productos</h2>
+            <p class="description">Encontrá todo lo que necesitás para tu peludito a continuación.</p>
+            <div class="container px-4 px-lg-5 mt-5">
+                <div id="productCards" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="py-5 footer">
+            <div class="container d-flex justify-content-center">
+                <i class="fab fa-whatsapp footer__icono"></i>
+                <i class="fab fa-facebook-square footer__icono"></i>
+                <i class="fab fa-instagram footer__icono"></i>
+                <i class="fas fa-envelope footer__icono"></i>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>

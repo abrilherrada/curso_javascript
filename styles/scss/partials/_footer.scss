@@ -1,0 +1,11 @@
+@import "./variables";
+
+/*FOOTER*/
+.footer {
+    background-color: $red;
+    &__icono {
+        color: white;
+        font-size: 2rem;
+        margin: 1rem;
+    }
+}

@@ -1,0 +1,21 @@
+@import "./variables";
+
+/*MENÚ DE NAVEGACIÓN*/
+.logo {
+    width: 9rem;
+}
+nav.navbar-light {
+    background-color: rgba(255, 255, 255, 0.911);
+}
+nav.navbar-light .navbar-nav .nav-link.active {
+    color: $red;
+    margin: 0rem 1.5rem;
+    transition: all 1s;
+}
+nav.navbar-light .navbar-nav .nav-link:hover {
+    color: $yellow;
+}
+nav {
+    font-size: 1.3rem;
+    z-index: 2;
+}
