@@ -34,7 +34,7 @@
                         <button class="btn btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <i class="bi-cart-fill me-1"></i>
                             Carrito
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                            <span id="badge" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
                     </form>
                 </div>
@@ -45,13 +45,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tu carrito</h5>
+                        <h3 class="modal-title" id="exampleModalLabel">Tu carrito</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div id="cartSummary" class="modal-body">
                         <p>Todavía no agregaste productos a tu carrito.</p>
                     </div>
-                    <div class="modal-footer">
+                    <div id="modalBtns" class="modal-footer hidden">
+                        <button id="clearBtn" type="button" class="btn btn-outline-dark">Vaciar <i class="bi-cart-fill me-1"></i></button>
                         <button type="button" class="btn btn-outline-dark">Pagar</button>
                     </div>
                 </div>

@@ -1,12 +1,14 @@
 /**
  * @challenge:
- * DESAFÍO
- * - Crear elementos manipulando el DOM a partir de la informaciòn de tus objetos.
- * - Modificar etiquetas existentes en función del resultado de operaciones.
+ * DESAFÍO:
+ * Con lo que vimos sobre DOM, ahora puedes sumarlo a tu proyecto, para interactuar entre los elementos HTML y JS. Es decir, asociar eventos que buscamos controlar sobre los elementos  de la interfaz de nuestro simulador.
  * 
- * @version: 1.6.0
+ * DESAFÍO COMPLEMENTARIO:
+ * Codifica un script cuyas instrucciones permitan generar de forma dinámica una sección del HTML. Los valores que alimentan este proceso comprenden una array de objetos, cuyos datos deberán incluirse empleando métodos del DOM y elementos apropiados para su representación.
+ * 
+ * @version: 1.7.0
  * @author: Abril Herrada
- * @date: 21/12/2021
+ * @date: 23/12/2021
  *
  * History:
  *  - v1.0.0: Primera entrega
@@ -16,6 +18,7 @@
  *  - v1.4.0: Quinta entrega
  *  - v1.5.0: Sexta entrega
  *  - v1.6.0: Séptima entrega
+ *  - v1.7.0: Octava entrega
  */
 
 //CLASE DE PRODUCTO
@@ -39,8 +42,12 @@ const products = [
     new Product ("6", "Pelota", "2200", "¿Tu perro destruye todos sus juguetes? Esta pelota es lo que estás buscando. Es prácticamente indestructible y la favorita de nuestros clientes.", "20"),
     new Product ("7", "Hueso", "1800", "Este hueso ultraresistente es perfecto para los peluditos que aman masticar. Tiene pequeños dientes de goma que ayudan a mantener la higiene dental de tu perro.", "18"),
     new Product ("8", "Cama", "4900", "¿Querés que tu perro duerma como un rey? Nuestra cama es ideal. Está confeccionada con tela antidesgarros que, además, se puede lavar en el lavarropas todas las veces que quieras.", "4"),
+    new Product ("9", "Arnés", "4000", "Este arnés supercómodo permite que tu perro disfrute más sus paseos. Tiene cuatro puntos de ajuste regulables, paneles acolchonados suaves y herrajes resistentes a golpes.", "25"),
+    new Product ("10", "Soga y pelota", "1100", "¿A tu perro le encanta jugar con vos? Este juguete les va a dar horas de diversión. La soga con manija te permite tener más control sobre el agarre y la pelota de goma soporta las mordidas más fuertes.", "15"),
+    new Product ("11", "Peluche", "2500", "Estos adorables peluches están hechos con un forro reforzado para juegos duraderos. Las texturas únicas y variadas intrigan a los perros y promueven el juego activo.", "20"),
+    new Product ("12", "Frisbee", "1500", "Regalale una experiencia única a tu perro con este frisbee flexible. No se astilla con las mordidas del perro y tiene un patrón que permite un buen agarre de ambos lados.", "12"),
 ]
-const cart = [];
+let cart = [];
 
 //Variables globales que se utilizarán en diversas funciones para calcular el total a pagar
 let total = 0;
@@ -68,7 +75,7 @@ const productCards = () => {
                 </div>
                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-between">
                     <input id="productQuantity${item.id}" type="number" value=0 min="1" max="${item.stock}" class="mb-3 input-quantity m-1">
-                    <div class="text-center"><a onClick="addToCart(${item.id})" class="btn btn-outline-dark m-1">Agregar</a></div>
+                    <div class="text-center"><a onclick="addToCart(${item.id})" class="btn btn-outline-dark m-1">Agregar</a></div>
                 </div>
             </div>
         </div>`;
@@ -77,7 +84,7 @@ const productCards = () => {
 }
 //Función que agrega los productos al array del carrito
 const addToCart = (id) => {
-    quantity = document.getElementById(`productQuantity${id}`).value;
+    let quantity = document.getElementById(`productQuantity${id}`).value;
     //Condicional que evalúa si la cantidad es válida y, si lo es, agrega el objeto de producto al array de carrito, si no, le avisa al usuario mediante un alert()
     if (quantity > 0) {
         cart.push({name: products[id - 1].name, price: products[id - 1].price, quantity: quantity});
@@ -95,12 +102,15 @@ const addToCart = (id) => {
         finalTotal = total;
     }
     purchaseSummary();
+    let badge = cart.length;
+    document.getElementById("badge").innerText = badge;
 }
 //Función que ordena alfabéticamente los productos agregados al carrito y crea el código HTML del resumen de compra que se imprimirá en el sitio
 const purchaseSummary = () => {
-    let purchase = "";
+    let btns = document.getElementById("modalBtns");
+    btns.className = "modal-footer";
     cart.sort((product1, product2) => (product1.name < product2.name) ? -1 : 1);
-    purchase =
+    let purchase =
     `<table class="table">
         <thead>
             <tr>
@@ -143,5 +153,20 @@ const purchaseSummary = () => {
     </table>`;
     document.getElementById("cartSummary").innerHTML = purchase;
 }
+//Función que vacía el array de carrito
+const clearCart = () => {
+    cart = [];
+    console.log(cart);
+    let cleared = 
+    `<p>Todavía no agregaste productos a tu carrito.</p>`;
+    document.getElementById("cartSummary").innerHTML = cleared;
+    let btns = document.getElementById("modalBtns");
+    btns.className = "hidden";
+    let badge = cart.length;
+    document.getElementById("badge").innerText = badge;
+}
 
 document.getElementById("productCards").innerHTML = productCards();
+
+let clearBtn = document.getElementById("clearBtn");
+clearBtn.addEventListener("click", clearCart);
