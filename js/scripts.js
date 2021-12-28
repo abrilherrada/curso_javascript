@@ -75,7 +75,7 @@ const productCards = () => {
                 </div>
                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-between">
                     <input id="productQuantity${item.id}" type="number" value=0 min="1" max="${item.stock}" class="mb-3 input-quantity m-1">
-                    <div class="text-center"><a onclick="addToCart(${item.id})" class="btn btn-outline-dark m-1">Agregar</a></div>
+                    <div class="text-center"><button data-productid="${item.id}" class="btn btn-outline-dark m-1 addBtn">Agregar</button></div>
                 </div>
             </div>
         </div>`;
@@ -167,6 +167,11 @@ const clearCart = () => {
 }
 
 document.getElementById("productCards").innerHTML = productCards();
+
+let addBtns = document.getElementsByClassName("addBtn");
+for (const btn of addBtns) {
+    btn.addEventListener("click", () => {addToCart(btn.dataset.productid)});
+}
 
 let clearBtn = document.getElementById("clearBtn");
 clearBtn.addEventListener("click", clearCart);
