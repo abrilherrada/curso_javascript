@@ -1,24 +1,30 @@
 /**
  * @challenge:
- * DESAFÍO:
- * Con lo que vimos sobre DOM, ahora puedes sumarlo a tu proyecto, para interactuar entre los elementos HTML y JS. Es decir, asociar eventos que buscamos controlar sobre los elementos  de la interfaz de nuestro simulador.
+ * SEGUNDA ENTREGA DEL PROYECTO FINAL:
+ * >>Objetivos Generales:
+ * 1. Codificar funciones de procesos esenciales y notificación de resultados por HTML, añadiendo interacción al simulador.
+ * 2. Ampliar y refinar el flujo de trabajo del script en términos de captura de eventos, procesamiento del simulador y notificación de resultados en forma de salidas por HTML, modificando el DOM.
+ * >>Objetivos Específicos:
+ * 1. Definir eventos a manejar y su función de respuesta.
+ * 2. Declarar una estructura de datos de tipo JSON, para definir datos iniciales a consumir por el simulador.
+ * 3. Modificar el DOM, ya sea para definir elementos al cargar la página o para realizar salidas de un procesamiento.
+ * 4. Almacenar datos (clave-valor) en el Storage y recuperarlos.
+
  * 
- * DESAFÍO COMPLEMENTARIO:
- * Codifica un script cuyas instrucciones permitan generar de forma dinámica una sección del HTML. Los valores que alimentan este proceso comprenden una array de objetos, cuyos datos deberán incluirse empleando métodos del DOM y elementos apropiados para su representación.
- * 
- * @version: 1.7.0
+ * @version: 1.8.0
  * @author: Abril Herrada
- * @date: 23/12/2021
+ * @date: 28/12/2021
  *
  * History:
- *  - v1.0.0: Primera entrega
- *  - v1.1.0: Segunda entrega
- *  - v1.2.0: Tercera entrega
- *  - v1.3.0: Cuarta entrega
- *  - v1.4.0: Quinta entrega
- *  - v1.5.0: Sexta entrega
- *  - v1.6.0: Séptima entrega
- *  - v1.7.0: Octava entrega
+ *  - v1.0.0: Primera entrega (Sintaxis y variables)
+ *  - v1.1.0: Segunda entrega (Control de flujos)
+ *  - v1.2.0: Tercera entrega (Ciclos/iteraciones)
+ *  - v1.3.0: Cuarta entrega (Funciones)
+ *  - v1.4.0: Quinta entrega (Objetos)
+ *  - v1.5.0: Sexta entrega (Arrays, Primera preentrega)
+ *  - v1.6.0: Séptima entrega (DOM)
+ *  - v1.7.0: Octava entrega (Eventos)
+ *  - v1.8.0: Novena entrega (Segunda preentrega)
  */
 
 //CLASE DE PRODUCTO
@@ -47,7 +53,7 @@ const products = [
     new Product ("11", "Peluche", "2500", "Estos adorables peluches están hechos con un forro reforzado para juegos duraderos. Las texturas únicas y variadas intrigan a los perros y promueven el juego activo.", "20"),
     new Product ("12", "Frisbee", "1500", "Regalale una experiencia única a tu perro con este frisbee flexible. No se astilla con las mordidas del perro y tiene un patrón que permite un buen agarre de ambos lados.", "12"),
 ]
-let cart = [];
+let cart = localStorage.getItem("cart") == null ? [] : JSON.parse(localStorage.getItem("cart"));
 
 //Variables globales que se utilizarán en diversas funciones para calcular el total a pagar
 let total = 0;
@@ -88,6 +94,7 @@ const addToCart = (id) => {
     //Condicional que evalúa si la cantidad es válida y, si lo es, agrega el objeto de producto al array de carrito, si no, le avisa al usuario mediante un alert()
     if (quantity > 0) {
         cart.push({name: products[id - 1].name, price: products[id - 1].price, quantity: quantity});
+        localStorage.setItem("cart", JSON.stringify(cart));
     }
     else {
         alert("Ingresá una cantidad válida para agregar el producto al carrito.");
@@ -102,8 +109,6 @@ const addToCart = (id) => {
         finalTotal = total;
     }
     purchaseSummary();
-    let badge = cart.length;
-    document.getElementById("badge").innerText = badge;
 }
 //Función que ordena alfabéticamente los productos agregados al carrito y crea el código HTML del resumen de compra que se imprimirá en el sitio
 const purchaseSummary = () => {
@@ -152,6 +157,8 @@ const purchaseSummary = () => {
     </tbody>
     </table>`;
     document.getElementById("cartSummary").innerHTML = purchase;
+    let badge = cart.length;
+    document.getElementById("badge").innerText = badge;
 }
 //Función que vacía el array de carrito
 const clearCart = () => {
@@ -164,9 +171,12 @@ const clearCart = () => {
     btns.className = "hidden";
     let badge = cart.length;
     document.getElementById("badge").innerText = badge;
+    localStorage.removeItem("cart");
 }
 
 document.getElementById("productCards").innerHTML = productCards();
+
+purchaseSummary();
 
 let addBtns = document.getElementsByClassName("addBtn");
 for (const btn of addBtns) {
