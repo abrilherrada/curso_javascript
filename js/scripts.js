@@ -1,19 +1,12 @@
 /**
- * @challenge:
- * SEGUNDA ENTREGA DEL PROYECTO FINAL:
- * >>Objetivos Generales:
- * 1. Codificar funciones de procesos esenciales y notificación de resultados por HTML, añadiendo interacción al simulador.
- * 2. Ampliar y refinar el flujo de trabajo del script en términos de captura de eventos, procesamiento del simulador y notificación de resultados en forma de salidas por HTML, modificando el DOM.
- * >>Objetivos Específicos:
- * 1. Definir eventos a manejar y su función de respuesta.
- * 2. Declarar una estructura de datos de tipo JSON, para definir datos iniciales a consumir por el simulador.
- * 3. Modificar el DOM, ya sea para definir elementos al cargar la página o para realizar salidas de un procesamiento.
- * 4. Almacenar datos (clave-valor) en el Storage y recuperarlos.
+ * @challenge: Sumar al proyecto integrador los conceptos de jQuery que vimos en las últimas dos clases:
+ * - Utilizar métodos jQuery para incorporar elementos al DOM.
+ * - Utilizar métodos jQuery para determinar respuesta a ciertos eventos.
 
  * 
- * @version: 1.8.0
+ * @version: 1.9.0
  * @author: Abril Herrada
- * @date: 28/12/2021
+ * @date: 11/01/2022
  *
  * History:
  *  - v1.0.0: Primera entrega (Sintaxis y variables)
@@ -25,6 +18,7 @@
  *  - v1.6.0: Séptima entrega (DOM)
  *  - v1.7.0: Octava entrega (Eventos)
  *  - v1.8.0: Novena entrega (Segunda preentrega)
+ *  - v1.9.0: Décima entrega (jQuery: selectores y eventos)
  */
 
 //CLASE DE PRODUCTO
@@ -53,45 +47,38 @@ const products = [
     new Product ("11", "Peluche", "2500", "Estos adorables peluches están hechos con un forro reforzado para juegos duraderos. Las texturas únicas y variadas intrigan a los perros y promueven el juego activo.", "20"),
     new Product ("12", "Frisbee", "1500", "Regalale una experiencia única a tu perro con este frisbee flexible. No se astilla con las mordidas del perro y tiene un patrón que permite un buen agarre de ambos lados.", "12"),
 ]
-let cart = localStorage.getItem("cart") == null ? [] : JSON.parse(localStorage.getItem("cart"));
+let cart = [];
 
-//Variables globales que se utilizarán en diversas funciones para calcular el total a pagar
-let total = 0;
-let finalTotal = 0;
+//Variable global para establecer el porcentaje de descuento a aplicar cuando el monto supera los $10.000.
+const discountPercentage = 25;
 
 //FUNCIONES
-//Función que calcula el total a pagar (con descuento) según el total sin descuento y el porcentaje de descuento que se ingrese
-const discount = (percentage) => {
-    finalTotal = total * ((100 - percentage) / 100);
-}
-//Función que genera el código HTML de todas las cartas de productos
+//Función que genera el código HTML de todas las cartas de productos.
 const productCards = () => {
-    let cards = "";
     products.forEach(item => {
-        cards = cards +
-        `<div class="col mb-5">
-            <div class="card h-100">
-                <img class="card-img-top img-product" src="./media/p${item.id}.jpg" alt="${item.name}" />
-                <div class="card-body p-4">
-                    <div class="text-center">
-                        <h5 class="fw-bolder">${item.name}</h5>
-                        <p class="card-text">$${item.price}</p>
-                        <p class="card-text description-product">${item.description}</p>
-                    </div>
-                </div>
-                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-between">
-                    <input id="productQuantity${item.id}" type="number" value=0 min="1" max="${item.stock}" class="mb-3 input-quantity m-1">
-                    <div class="text-center"><button data-productid="${item.id}" class="btn btn-outline-dark m-1 addBtn">Agregar</button></div>
-                </div>
-            </div>
-        </div>`;
+        $("#productCards").append(`<div class="col mb-5">
+                                    <div class="card h-100">
+                                        <img class="card-img-top img-product" src="./media/p${item.id}.jpg" alt="${item.name}" />
+                                        <div class="card-body p-4">
+                                            <div class="text-center">
+                                                <h5 class="fw-bolder">${item.name}</h5>
+                                                <p class="card-text">$${item.price}</p>
+                                                <p class="card-text description-product">${item.description}</p>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-between">
+                                            <input id="productQuantity${item.id}" type="number" value=0 min="1" max="${item.stock}" class="mb-3 input-quantity m-1">
+                                            <div class="text-center"><button data-productid="${item.id}" class="btn btn-outline-dark m-1 addBtn">Agregar</button></div>
+                                        </div>
+                                    </div>
+                                </div>`);
     });
-    return cards;
 }
-//Función que agrega los productos al array del carrito
+
+//Función que agrega los productos al array del carrito y hace un llamado a la función que genera el resumen de compra.
 const addToCart = (id) => {
     let quantity = document.getElementById(`productQuantity${id}`).value;
-    //Condicional que evalúa si la cantidad es válida y, si lo es, agrega el objeto de producto al array de carrito, si no, le avisa al usuario mediante un alert()
+    //Condicional que evalúa si la cantidad es válida. Si lo es, agrega el producto al array de carrito y lo guarda en el local storage. Si no es válida, le avisa al usuario mediante un alert.
     if (quantity > 0) {
         cart.push({name: products[id - 1].name, price: products[id - 1].price, quantity: quantity});
         localStorage.setItem("cart", JSON.stringify(cart));
@@ -99,71 +86,85 @@ const addToCart = (id) => {
     else {
         alert("Ingresá una cantidad válida para agregar el producto al carrito.");
     }
-    console.log(cart);
-    total = total + products[id - 1].price * quantity;
-    //Condicional que evalúa si corresponde aplicar el descuento al total a pagar
-    if (total >= 10000) {
-        discount(25);
-    }
-    else if (total > 0 && total < 10000) {
-        finalTotal = total;
-    }
     purchaseSummary();
 }
-//Función que ordena alfabéticamente los productos agregados al carrito y crea el código HTML del resumen de compra que se imprimirá en el sitio
+
+//Función que calcula el total sin descuento y el total con descuento, y los guarda en un objeto.
+const calculateTotal = () => {
+    let fullTotal = 0;
+    let discountedTotal = 0;
+    for (const item of cart) {
+        fullTotal += item.price * item.quantity;
+    }
+    //Condicional que evalúa si corresponde el descuento y lo aplica al total a pagar.
+    if (fullTotal >= 10000) {
+        discountedTotal = fullTotal * ((100 - discountPercentage) / 100);
+    }
+    else if (fullTotal > 0 && fullTotal < 10000) {
+        discountedTotal = fullTotal;
+    }
+    return {fullTotal, discountedTotal};
+}
+
+//Función que, en primer lugar, evalúa si hay productos en el carrito. Si hay, los ordena alfabéticamente, genera el HTML del resumen de compra y aumenta el número en la insignia del botón del carrito. Si no hay productos en el carrito, esconde los botones del modal.
 const purchaseSummary = () => {
     let btns = document.getElementById("modalBtns");
-    btns.className = "modal-footer";
-    cart.sort((product1, product2) => (product1.name < product2.name) ? -1 : 1);
-    let purchase =
-    `<table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Total del producto</th>
-            </tr>
-        </thead>
-        <tbody>`;
-    cart.forEach(item => {
-        purchase = purchase +
-        `<tr>
-            <th scope="row">${item.name}</th>
-            <td>${item.price}</td>
-            <td>${item.quantity}</td>
-            <td>${item.price * item.quantity}</td>
-        </tr>`;
-    });
-    purchase = purchase +
-    `<tr class="table-active">
-        <th scope="row"></th>
-        <td></td>
-        <td>Total sin descuento</td>
-        <td>${total}</td>
-    </tr>
-    <tr class="table-active">
-        <th scope="row"></th>
-        <td></td>
-        <td>Descuento (25%)</td>
-        <td>${finalTotal - total}</td>
-    </tr>
-    <tr class="table-active">
-        <th scope="row"></th>
-        <td></td>
-        <td><strong>Total final</strong></td>
-        <td>${finalTotal}</td>
-    </tr>
-    </tbody>
-    </table>`;
-    document.getElementById("cartSummary").innerHTML = purchase;
-    let badge = cart.length;
-    document.getElementById("badge").innerText = badge;
+    if (cart.length > 0) {
+        btns.className = "modal-footer";
+        cart.sort((product1, product2) => (product1.name < product2.name) ? -1 : 1);
+        let purchase =
+        `<table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Total del producto</th>
+                </tr>
+            </thead>
+            <tbody>`;
+        cart.forEach(item => {
+            purchase +=
+            `<tr>
+                <th scope="row">${item.name}</th>
+                <td>${item.price}</td>
+                <td>${item.quantity}</td>
+                <td>${item.price * item.quantity}</td>
+            </tr>`;
+        });
+        purchase +=
+        `<tr class="table-active">
+            <th scope="row"></th>
+            <td></td>
+            <td>Total sin descuento</td>
+            <td>${calculateTotal().fullTotal}</td>
+        </tr>
+        <tr class="table-active">
+            <th scope="row"></th>
+            <td></td>
+            <td>Descuento (${discountPercentage}%)</td>
+            <td>- ${calculateTotal().fullTotal - calculateTotal().discountedTotal}</td>
+        </tr>
+        <tr class="table-active">
+            <th scope="row"></th>
+            <td></td>
+            <td><strong>Total final</strong></td>
+            <td>${calculateTotal().discountedTotal}</td>
+        </tr>
+        </tbody>
+        </table>`;
+        document.getElementById("cartSummary").innerHTML = purchase;
+        let badge = cart.length;
+        document.getElementById("badge").innerText = badge;
+    }
+    else {
+        btns.className = "hidden";
+    }
 }
-//Función que vacía el array de carrito
+
+//Función que vacía el array de carrito, muestra un mensaje en el modal del resumen de compra, esconde los botones del modal, resetea el número en la insignia del botón del carrito y borra el carrito del local storage.
 const clearCart = () => {
     cart = [];
-    console.log(cart);
     let cleared = 
     `<p>Todavía no agregaste productos a tu carrito.</p>`;
     document.getElementById("cartSummary").innerHTML = cleared;
@@ -174,7 +175,11 @@ const clearCart = () => {
     localStorage.removeItem("cart");
 }
 
-document.getElementById("productCards").innerHTML = productCards();
+productCards();
+
+if (localStorage.getItem("cart") !== null) {
+    cart = JSON.parse(localStorage.getItem("cart"));
+}
 
 purchaseSummary();
 
@@ -183,5 +188,4 @@ for (const btn of addBtns) {
     btn.addEventListener("click", () => {addToCart(btn.dataset.productid)});
 }
 
-let clearBtn = document.getElementById("clearBtn");
-clearBtn.addEventListener("click", clearCart);
+$("#clearBtn").click(clearCart);
