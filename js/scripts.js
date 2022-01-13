@@ -89,6 +89,21 @@ const addToCart = (id) => {
     purchaseSummary();
 }
 
+//Función que muestra y oculta una notificación cuando el usuario agrega un producto al carrito.
+const added = (e, id) => {
+    let quantity = document.getElementById(`productQuantity${id}`).value;
+    if (quantity > 0) {
+        $(e.target).parent().parent().parent().append(`<p id="added${id}" class="align-self-center notification${id}">Producto agregado <i class="fas fa-check"></i></p>`);
+        $('.fa-check').css('color', 'green');
+        $(`#added${id}`).hide()
+                    .slideDown("slow")
+                    .delay(2000)
+                    .slideUp("slow", () => {
+                        $(`.notification${id}`).remove()
+                    });
+    }
+}
+
 //Función que calcula el total sin descuento y el total con descuento, y los guarda en un objeto.
 const calculateTotal = () => {
     let fullTotal = 0;
@@ -175,6 +190,24 @@ const clearCart = () => {
     localStorage.removeItem("cart");
 }
 
+$(".logo").fadeIn("fast", () => {
+    $(".logo").fadeOut("slow", () => {
+        $(".logo").fadeIn("slow")
+    });
+});
+
+let payModal = document.getElementById("payModal");
+let payBtn = document.getElementById("payBtn");
+let closeModal = document.getElementsByClassName("close")[0];
+
+payBtn.addEventListener("click", () => {
+    payModal.className = "popUp shown";
+});
+
+closeModal.addEventListener("click", () => {
+    payModal.className = "popUp hidden";
+});
+
 productCards();
 
 if (localStorage.getItem("cart") !== null) {
@@ -185,7 +218,10 @@ purchaseSummary();
 
 let addBtns = document.getElementsByClassName("addBtn");
 for (const btn of addBtns) {
-    btn.addEventListener("click", () => {addToCart(btn.dataset.productid)});
+    btn.addEventListener("click", (e) => {
+        addToCart(btn.dataset.productid)
+        added(e, btn.dataset.productid)
+    });
 }
 
 $("#clearBtn").click(clearCart);
