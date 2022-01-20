@@ -1,12 +1,17 @@
 /**
- * @challenge: Sumar al proyecto integrador los conceptos de jQuery que vimos en las últimas dos clases:
- * - Utilizar métodos jQuery para incorporar elementos al DOM.
- * - Utilizar métodos jQuery para determinar respuesta a ciertos eventos.
-
+ * @challenge:
+ * DESAFÍO:
+ * Tomando como ejemplo la llamada AJAX con JSON, incorpora al proyecto del simulador al menos una llamada AJAX, que mediante la interacción del usuario (un botón o envío de formulario), se realice la llamada y la misma responda un JSON estático. incluir esa respuesta en el HTML.
  * 
- * @version: 1.9.0
+ * TERCERA PREENTREGA:
+ *  - Maquetación del HTML y eventos a manejar en él.
+ *  - Incorporación de jQuery para acceder y agregar elementos al DOM.
+ *  - Implementación de efectos y animaciones. 
+ *  - Estilos base CSS del simulador.
+ * 
+ * @version: 1.11.0
  * @author: Abril Herrada
- * @date: 11/01/2022
+ * @date: 20/01/2022
  *
  * History:
  *  - v1.0.0: Primera entrega (Sintaxis y variables)
@@ -19,43 +24,63 @@
  *  - v1.7.0: Octava entrega (Eventos)
  *  - v1.8.0: Novena entrega (Segunda preentrega)
  *  - v1.9.0: Décima entrega (jQuery: selectores y eventos)
+ *  - v1.10.0: Decimoprimera entrega (jQuery: efectos y animaciones)
+ *  - v1.11.0: Decimosegunda entrega (AJAX, Tercera preentrega)
  */
 
-//CLASE DE PRODUCTO
-class Product {
-    constructor (id, name, price, description, stock) {
+//CLASE DE PRODUCTOS EN CARRITO
+class ProductsInCart {
+    constructor (id, name, price, quantity) {
         this.id = parseInt(id);
         this.name = name;
         this.price = parseInt(price);
-        this.description = description;
-        this.stock = parseInt(stock);
+        this.quantity = parseInt(quantity);
+        this.modifyQuantity = (quantity) => {
+            this.quantity += quantity;
+        }
     }
 }
 
-//ARRAYS DE PRODUCTOS Y DE CARRITO
-const products = [
-    new Product ("1", "Collar", "1000", "Este collar tiene una manija que te permite retener a tu perro en caso de emergencia y una traba de seguridad para evitar que se salga.", "5"),
-    new Product ("2", "Correa extensible", "5000", "Esta correa es ideal para dejar que tu perro explore. Se puede extender hasta 3 metros y tiene un botón para trabarla en el largo que quieras.", "10"),
-    new Product ("3", "Correa cuero", "1500", "Esta correa de 2 metros de largo es la más elegida por nuestros clientes. Es de cuero, lo cual la hace ultraresistente.", "15"),
-    new Product ("4", "Plato doble", "2000", "Si estás buscando un plato con estilo para tu perro, este es el producto para vos. Además de su diseño práctico, tiene una base antideslizante para evitar accidentes.", "8"),
-    new Product ("5", "Plato lento", "1000", "Si tu amigo de 4 patas es un glotón, este plato es ideal para él. Su diseño permite que tu perro coma más lento y, además, esta actividad ayuda a aliviar el estrés.", "12"),
-    new Product ("6", "Pelota", "2200", "¿Tu perro destruye todos sus juguetes? Esta pelota es lo que estás buscando. Es prácticamente indestructible y la favorita de nuestros clientes.", "20"),
-    new Product ("7", "Hueso", "1800", "Este hueso ultraresistente es perfecto para los peluditos que aman masticar. Tiene pequeños dientes de goma que ayudan a mantener la higiene dental de tu perro.", "18"),
-    new Product ("8", "Cama", "4900", "¿Querés que tu perro duerma como un rey? Nuestra cama es ideal. Está confeccionada con tela antidesgarros que, además, se puede lavar en el lavarropas todas las veces que quieras.", "4"),
-    new Product ("9", "Arnés", "4000", "Este arnés supercómodo permite que tu perro disfrute más sus paseos. Tiene cuatro puntos de ajuste regulables, paneles acolchonados suaves y herrajes resistentes a golpes.", "25"),
-    new Product ("10", "Soga y pelota", "1100", "¿A tu perro le encanta jugar con vos? Este juguete les va a dar horas de diversión. La soga con manija te permite tener más control sobre el agarre y la pelota de goma soporta las mordidas más fuertes.", "15"),
-    new Product ("11", "Peluche", "2500", "Estos adorables peluches están hechos con un forro reforzado para juegos duraderos. Las texturas únicas y variadas intrigan a los perros y promueven el juego activo.", "20"),
-    new Product ("12", "Frisbee", "1500", "Regalale una experiencia única a tu perro con este frisbee flexible. No se astilla con las mordidas del perro y tiene un patrón que permite un buen agarre de ambos lados.", "12"),
-]
+//ARRAYS
+let products = [];
 let cart = [];
+let filteredProducts = [];
 
-//Variable global para establecer el porcentaje de descuento a aplicar cuando el monto supera los $10.000.
+//VARIABLES GLOBALES
+//Variable para establecer el porcentaje de descuento a aplicar cuando el monto supera los $10.000.
 const discountPercentage = 25;
 
+//Variables para el modal de carrito, el botón del carrito y el botón de cerrar el modal de carrito.
+let cartModal = document.getElementById("cartModal");
+let cartBtn = document.getElementById("cartBtn");
+let closeModal1 = document.getElementsByClassName("close")[0];
+
+//Variables para el modal de compra realizada, el botón de pagar y el botón de cerrar el modal de compra.
+let payModal = document.getElementById("payModal");
+let payBtn = document.getElementById("payBtn");
+let closeModal2 = document.getElementsByClassName("close")[1];
+
+//Variables para el modal de cantidad inválida y el botón de cerrar el modal de cantidad inválida.
+let invalidModal = document.getElementById("invalidModal");
+let closeModal3 = document.getElementsByClassName("close")[2];
+
+//Variables para las pestañas de productos filtrados.
+let allTab = document.getElementById("tab1");
+let outdoorsTab = document.getElementById("tab2");
+let homeTab = document.getElementById("tab3");
+let toysTab = document.getElementById("tab4");
+
 //FUNCIONES
-//Función que genera el código HTML de todas las cartas de productos.
-const productCards = () => {
-    products.forEach(item => {
+//Función que genera el código HTML de las cartas de productos en función de la categoría seleccionada y hace una llamada a la función que genera los addEventListener de los botones Agregar.
+const productCards = (productCategory) => {
+    document.getElementById("productCards").innerHTML = "";
+    if (productCategory == "todos") {
+        filteredProducts = products;
+    }
+    else {
+        filteredProducts = products.filter(item => item.category == productCategory);
+    }
+    filteredProducts.forEach(item => {
         $("#productCards").append(`<div class="col mb-5">
                                     <div class="card h-100">
                                         <img class="card-img-top img-product" src="./media/p${item.id}.jpg" alt="${item.name}" />
@@ -72,39 +97,110 @@ const productCards = () => {
                                         </div>
                                     </div>
                                 </div>`);
+        $(`#productCards`).hide();
+        $(`#productCards`).fadeIn("slow");
     });
+    createEventListener();
+}
+
+//Función que genera el addEventListener de los botones Agregar.
+const createEventListener = () => {
+    let addBtns = document.getElementsByClassName("addBtn");
+    for (const btn of addBtns) {
+        btn.addEventListener("click", (e) => {
+            addToCart(e, btn.dataset.productid);
+        });
+    }
+}
+
+//Función que evalúa si el carrito ya contiene el producto.
+const checkCart = (id) => {
+    return cart.some(item => item.id == id);
+}
+
+//Función que muestra un modal que indica que la cantidad seleccionada es inválida e indica cuántas unidades puede agregar el usuario.
+const invalidQuantityModal = (stock, quantity, type) => {
+    let invalidQuantity;
+    if (type === 'insuficiente') {
+        switch (stock - quantity) {
+            case 0:
+                invalidQuantity = `<p>Ya no tenemos stock de este producto.</p>`;
+                break;
+            case 1:
+                invalidQuantity = `<p>La cantidad que ingresaste supera nuestro stock. Solo queda 1 unidad disponible.</p>`;
+                break;
+            default:
+                invalidQuantity = `<p>La cantidad que ingresaste supera nuestro stock. Agregá ${stock - quantity} unidades o menos.</p>`;
+                break;
+        }
+    }
+    else if (type === 'inválido') {
+        invalidQuantity = `<p>Ingresá una cantidad válida para agregar el producto al carrito.</p>`;
+    }
+    document.getElementById("invalidModalBody").innerHTML = invalidQuantity;
+    invalidModal.className = "popUp shown";
 }
 
 //Función que agrega los productos al array del carrito y hace un llamado a la función que genera el resumen de compra.
-const addToCart = (id) => {
-    let quantity = document.getElementById(`productQuantity${id}`).value;
-    //Condicional que evalúa si la cantidad es válida. Si lo es, agrega el producto al array de carrito y lo guarda en el local storage. Si no es válida, le avisa al usuario mediante un alert.
+const addToCart = (e, id) => {
+    let quantity = parseInt(document.getElementById(`productQuantity${id}`).value);
+    //Condicional que evalúa si la cantidad es válida. Si lo es, agrega el producto y lo guarda en el local storage. Si no es válida, le avisa al usuario mediante una notificación.
     if (quantity > 0) {
-        cart.push({name: products[id - 1].name, price: products[id - 1].price, quantity: quantity});
+        //Condicional que evalúa si el producto ya está en el array de carrito. Si está, modifica el valor de la propiedad cantidad. Si no está, lo agrega.
+        switch (checkCart(id)) {
+            case true:
+                let productIndex = cart.findIndex(item => item.id == id);
+                //Condicional que evalúa si hay suficientes productos en stock. Si no hay, le avisa al usuario. Si hay, agrega la cantidad seleccionada al carrito.
+                if (quantity > products[id - 1].stock - cart[productIndex].quantity) {
+                    //Notificación de stock insuficiente.
+                    invalidQuantityModal(products[id - 1].stock, cart[productIndex].quantity, 'insuficiente');
+                }
+                else {
+                    cart[productIndex].modifyQuantity(quantity);
+                    //Notificación de producto agregado.
+                    added(e, id);
+                }
+                break;
+            case false:
+                //Condicional que evalúa si hay suficientes productos en stock. Si no hay, le avisa al usuario. Si hay, agrega el producto al carrito.
+                if (quantity > products[id - 1].stock) {
+                    //Notificación de stock insuficiente.
+                    invalidQuantityModal(products[id - 1].stock, 0, 'insuficiente');
+                }
+                else {
+                    cart.push(new ProductsInCart (products[id - 1].id, products[id - 1].name, products[id - 1].price, quantity));
+                    //Notificación de producto agregado.
+                    added(e, id);
+                }
+                break;
+        }
+        //Ordena alfabéticamente los objetos de productos en el carrito. 
+        cart.sort((product1, product2) => (product1.name < product2.name) ? -1 : 1);
+        //Guarda el array de carrito en el local storage.
         localStorage.setItem("cart", JSON.stringify(cart));
     }
     else {
-        alert("Ingresá una cantidad válida para agregar el producto al carrito.");
+        invalidQuantityModal(0, 0, 'inválido');
     }
+    //Llama a la función que genera el resumen de compra.
     purchaseSummary();
+    //Resetea el valor del input.
+    document.getElementById(`productQuantity${id}`).value = 0;
 }
 
 //Función que muestra y oculta una notificación cuando el usuario agrega un producto al carrito.
 const added = (e, id) => {
-    let quantity = document.getElementById(`productQuantity${id}`).value;
-    if (quantity > 0) {
-        $(e.target).parent().parent().parent().append(`<p id="added${id}" class="align-self-center notification${id}">Producto agregado <i class="fas fa-check"></i></p>`);
-        $('.fa-check').css('color', 'green');
-        $(`#added${id}`).hide()
-                    .slideDown("slow")
-                    .delay(2000)
-                    .slideUp("slow", () => {
-                        $(`.notification${id}`).remove()
-                    });
-    }
+    $(e.target).parent().parent().parent().append(`<p id="added${id}" class="align-self-center notification${id}">Producto agregado <i class="fas fa-check"></i></p>`);
+    $('.fa-check').css('color', 'green');
+    $(`#added${id}`).hide()
+                .slideDown("slow")
+                .delay(4000)
+                .slideUp("slow", () => {
+                    $(`.notification${id}`).remove()
+                });
 }
 
-//Función que calcula el total sin descuento y el total con descuento, y los guarda en un objeto.
+//Función que calcula el total sin descuento y el total con descuento de los productos en el carrito, y los guarda en un objeto.
 const calculateTotal = () => {
     let fullTotal = 0;
     let discountedTotal = 0;
@@ -121,12 +217,11 @@ const calculateTotal = () => {
     return {fullTotal, discountedTotal};
 }
 
-//Función que, en primer lugar, evalúa si hay productos en el carrito. Si hay, los ordena alfabéticamente, genera el HTML del resumen de compra y aumenta el número en la insignia del botón del carrito. Si no hay productos en el carrito, esconde los botones del modal.
+//Función que evalúa si hay productos en el carrito. Si hay, muestra los botones del modal (Vaciar carrito y Pagar), genera el HTML del resumen de compra y aumenta el número en la insignia del botón del carrito. Si no hay productos en el carrito, esconde los botones del modal.
 const purchaseSummary = () => {
     let btns = document.getElementById("modalBtns");
     if (cart.length > 0) {
         btns.className = "modal-footer";
-        cart.sort((product1, product2) => (product1.name < product2.name) ? -1 : 1);
         let purchase =
         `<table class="table">
             <thead>
@@ -177,6 +272,33 @@ const purchaseSummary = () => {
     }
 }
 
+//Función que redirige al usuario a Mercado Pago.
+const pay = () => {
+    let payment = [{
+        title: 'Productos varios',
+        description: '',
+        picture_url: '',
+        category_id: '',
+        quantity: 1,
+        currency_id: "ARS",
+        unit_price: calculateTotal().discountedTotal,
+    }];
+    $.ajax({
+        method: "POST",
+        url: "https://api.mercadopago.com/checkout/preferences",
+        headers: {
+            Authorization: "Bearer TEST-518072296284558-042320-fe06c7a6491e260a2bef78daad3b3325-57629816",
+            },
+        data: JSON.stringify({
+            items: payment,
+        }),
+        success: function (response) {
+            const data = response;
+            window.open(data.init_point, "_blank")
+        }
+    })
+}
+
 //Función que vacía el array de carrito, muestra un mensaje en el modal del resumen de compra, esconde los botones del modal, resetea el número en la insignia del botón del carrito y borra el carrito del local storage.
 const clearCart = () => {
     cart = [];
@@ -190,38 +312,65 @@ const clearCart = () => {
     localStorage.removeItem("cart");
 }
 
-$(".logo").fadeIn("fast", () => {
-    $(".logo").fadeOut("slow", () => {
-        $(".logo").fadeIn("slow")
-    });
-});
+//Función que guarda los productos de products.json en el array.
+const getProducts = async () => {
+    try {
+        let data = await fetch("js/products.json");
+        products = await data.json();
+        productCards("todos"); 
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-let payModal = document.getElementById("payModal");
-let payBtn = document.getElementById("payBtn");
-let closeModal = document.getElementsByClassName("close")[0];
-
-payBtn.addEventListener("click", () => {
-    payModal.className = "popUp shown";
-});
-
-closeModal.addEventListener("click", () => {
-    payModal.className = "popUp hidden";
-});
-
-productCards();
+getProducts();
 
 if (localStorage.getItem("cart") !== null) {
     cart = JSON.parse(localStorage.getItem("cart"));
 }
 
-purchaseSummary();
+cartBtn.addEventListener("click", () => {
+    cartModal.className = "popUp shown";
+});
 
-let addBtns = document.getElementsByClassName("addBtn");
-for (const btn of addBtns) {
-    btn.addEventListener("click", (e) => {
-        addToCart(btn.dataset.productid)
-        added(e, btn.dataset.productid)
+closeModal1.addEventListener("click", () => {
+    cartModal.className = "popUp hidden";
+});
+
+payBtn.addEventListener("click", () => {
+    payModal.className = "popUp shown";
+    cartModal.className = "popUp hidden";
+    cart.forEach(item => {
+        products[item.id - 1].stock = parseInt(products[item.id - 1].stock) - item.quantity;
     });
-}
+    pay();
+    clearCart();
+});
+
+closeModal2.addEventListener("click", () => {
+    payModal.className = "popUp hidden";
+});
+
+closeModal3.addEventListener("click", () => {
+    invalidModal.className = "popUp hidden";
+});
+
+allTab.addEventListener("click",  () => {
+    productCards("todos");
+});
+
+outdoorsTab.addEventListener("click", () => {
+    productCards("paseo");
+});
+
+homeTab.addEventListener("click",  () => {
+    productCards("hogar");
+});
+
+toysTab.addEventListener("click", () => {
+    productCards("juguete");
+});
+
+purchaseSummary();
 
 $("#clearBtn").click(clearCart);

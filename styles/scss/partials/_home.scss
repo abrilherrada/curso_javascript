@@ -1,5 +1,48 @@
 @import "./variables";
 
+/*MODAL*/
+.popUp {
+    display: none;
+    position: fixed;
+    z-index: 1056;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    .popUpContent {
+        background-color: white;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 0.3rem;
+        width: 50%;
+        .popUpHeader {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #dee2e6;
+            .close {
+                color: grey;
+                font-size: 2.5rem;
+            }
+            .close:hover, .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+        .popUpBody {
+            flex: 1 1 auto;
+            padding: 2rem 0rem 0.5rem 0rem;
+        }
+    }
+}
+
 /*INDEX - HERO*/
 .hero {
     background-image: url(../media/hero.jpg);
@@ -36,6 +79,46 @@
 .description{
     text-align: center;
 }
+.tab-container {
+    width: 100%;
+    font-size: 0;
+    border-radius: 3px;
+    .tab-input {
+        display: none;
+        &:checked + label {
+            background: #eee;
+            border-bottom: 2px solid $red;
+        }
+    }
+    label {
+        font-size: 16px;
+        height: 36px;
+        line-height: 36px;
+        width: 25%;
+        text-align: center;
+        background: #f4f4f4;
+        color: #555;
+        transition: 0.25s background ease;
+        cursor: pointer;
+        &::after {
+            border-bottom: 2px solid #e6394769;
+            transition: 0.25s ease;
+        }
+        &:hover {
+            border-bottom: 2px solid #e6394769;
+        }
+    }
+    .content-container {
+        background: #eee;
+        font-size: 16px;
+        min-height: 650px;
+        .content {
+            padding: 10px;
+            width: 100%;
+            transition: 0.25s ease;
+        }
+    }
+}
 .img-product {
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
@@ -66,4 +149,8 @@
 
 .hidden { 
     display: none;
+}
+
+.shown {
+    display: block;
 }

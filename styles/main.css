@@ -88,45 +88,55 @@ nav {
   display: none;
   position: fixed;
   z-index: 1056;
-  padding-top: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
-.popUpContent {
+.popUp .popUpContent {
   background-color: white;
   margin: auto;
   padding: 20px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0.3rem;
-  width: 50%
+  width: 50%;
 }
 
-.close {
+.popUp .popUpContent .popUpHeader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.popUp .popUpContent .popUpHeader .close {
   color: grey;
   font-size: 2.5rem;
 }
 
-.close:hover,.close:focus {
+.popUp .popUpContent .popUpHeader .close:hover, .popUp .popUpContent .popUpHeader .close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
 }
 
-.popUpHeader {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.popUpBody {
-  flex: 1 1 auto;
+.popUp .popUpContent .popUpBody {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   padding: 2rem 0rem 0.5rem 0rem;
 }
 
@@ -180,6 +190,57 @@ nav {
 
 .description {
   text-align: center;
+}
+
+.tab-container {
+  width: 100%;
+  font-size: 0;
+  border-radius: 3px;
+}
+
+.tab-container .tab-input {
+  display: none;
+}
+
+.tab-container .tab-input:checked + label {
+  background: #eee;
+  border-bottom: 2px solid #E63946;
+}
+
+.tab-container label {
+  font-size: 16px;
+  height: 36px;
+  line-height: 36px;
+  width: 25%;
+  text-align: center;
+  background: #f4f4f4;
+  color: #555;
+  -webkit-transition: 0.25s background ease;
+  transition: 0.25s background ease;
+  cursor: pointer;
+}
+
+.tab-container label::after {
+  border-bottom: 2px solid #e6394769;
+  -webkit-transition: 0.25s ease;
+  transition: 0.25s ease;
+}
+
+.tab-container label:hover {
+  border-bottom: 2px solid #e6394769;
+}
+
+.tab-container .content-container {
+  background: #eee;
+  font-size: 16px;
+  min-height: 650px;
+}
+
+.tab-container .content-container .content {
+  padding: 10px;
+  width: 100%;
+  -webkit-transition: 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .img-product {

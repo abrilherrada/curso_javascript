@@ -31,7 +31,7 @@
                         <li class="nav-item"><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contacto</a></li>
                     </ul>
                     <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button id="cartBtn" class="btn btn-outline-dark" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Carrito
                             <span id="badge" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -41,20 +41,18 @@
             </div>
         </nav>
         <!-- Cart modal-->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLabel">Tu carrito</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div id="cartSummary" class="modal-body">
-                        <p>Todavía no agregaste productos a tu carrito.</p>
-                    </div>
-                    <div id="modalBtns" class="modal-footer hidden">
-                        <button id="clearBtn" type="button" class="btn btn-outline-dark">Vaciar <i class="bi-cart-fill me-1"></i></button>
-                        <button id="payBtn" type="button" class="btn btn-outline-dark">Pagar</button>
-                    </div>
+        <div id="cartModal" class="popUp hidden">
+            <div class="popUpContent">
+                <div class="popUpHeader">
+                    <h3 class="headerTitle">Tu carrito</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div id="cartSummary" class="popUpBody">
+                    <p>Todavía no agregaste productos a tu carrito.</p>
+                </div>
+                <div id="modalBtns" class="modal-footer hidden">
+                    <button id="clearBtn" type="button" class="btn btn-outline-dark">Vaciar <i class="bi-cart-fill me-1"></i></button>
+                    <button id="payBtn" type="button" class="btn btn-outline-dark">Pagar</button>
                 </div>
             </div>
         </div>
@@ -65,12 +63,24 @@
                     <h3 class="headerTitle">¡Gracias por tu compra!</h3>
                     <span class="close">&times;</span>
                 </div>
-                <div id="payModalBody" class="popUpBody">
+                <div class="popUpBody">
                     <p>Estamos muy felices de que nos hayas elegido para consentir a tu mejor amigo.</p>
                     <p>Recibirás tu compra en los próximos 7 días.</p>
                 </div>
             </div>
         </div>
+        <!-- Invalid quantity modal-->
+        <div id="invalidModal" class="popUp hidden">
+            <div class="popUpContent">
+                <div class="popUpHeader">
+                    <h3 class="headerTitle">Cantidad inválida</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div id="invalidModalBody" class="popUpBody">
+                    <p>Ingresá una cantidad válida para agregar el producto al carrito.</p>
+                </div>
+            </div>
+        </div>        
         <!-- Hero-->
         <header class="container-fluid d-flex justify-content-start align-items-center w-100 hero">
             <div class="row">
@@ -83,8 +93,22 @@
         <section class="py-5">
             <h2 class="product-title">Productos</h2>
             <p class="description">Encontrá todo lo que necesitás para tu peludito a continuación.</p>
-            <div class="container px-4 px-lg-5 mt-5">
-                <div id="productCards" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="tab-container">
+                <input type="radio" id="tab1" name="tab" class="tab-input" checked>
+                <label for="tab1"><i class="fas fa-clipboard-list"></i> Todos</label>
+                <input type="radio" id="tab2" name="tab" class="tab-input">
+                <label for="tab2"><i class="fas fa-cloud-sun"></i> Paseos</label>
+                <input type="radio" id="tab3" name="tab" class="tab-input">
+                <label for="tab3"><i class="fas fa-home"></i> Hogar</label>
+                <input type="radio" id="tab4" name="tab" class="tab-input">
+                <label for="tab4"><i class="fas fa-baseball-ball"></i> Juguetes</label>
+                <div class="content-container">
+                    <div class="content" id="c1">
+                        <div class="container px-4 px-lg-5 mt-5">
+                            <div id="productCards" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
