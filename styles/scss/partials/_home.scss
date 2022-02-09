@@ -49,6 +49,12 @@
     flex-direction: column;
     #contactMessage {
         text-align: center;
+        #inputError {
+            color: $red;
+        }
+        #inputSuccess {
+            color: green;
+        }
     }
     &Inputs {
         width: 100%;

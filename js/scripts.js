@@ -74,6 +74,10 @@ let inputName = document.getElementById("inputName");
 let inputMail = document.getElementById("inputMail");
 let inputText = document.getElementById("inputText");
 
+//OBJETOS
+//Objeto que verifica que el formato de la dirección de correo electrónico sea válida.
+let emailFormat = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+
 //FUNCIONES
 //Función que genera el código HTML de las cartas de productos en función de la categoría seleccionada y hace una llamada a la función que genera los addEventListener de los botones Agregar.
 const productCards = (productCategory) => {
@@ -388,26 +392,33 @@ purchaseSummary();
 
 sendFormBtn.addEventListener("click", (event) => {
     event.preventDefault();
-    fetch("https://submit-form.com/71s1hALW", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        body: JSON.stringify({
-            name: inputName.value,
-            email: inputMail.value,
-            question: inputText.value,
-        }),
-    })
-        .then(function () {
-            let successfulSubmit = `<p>Tu consulta se envió correctamente.</p><p>Si tenés otra duda o pregunta, volvé a completar el formulario.</p>`;
-            document.getElementById("contactMessage").innerHTML = successfulSubmit;
-            inputText.value = "";
+    if (inputName.value !== "" && emailFormat.test(inputMail.value) && inputText.value !== "") {
+        fetch("https://submit-form.com/71s1hALW", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                name: inputName.value,
+                email: inputMail.value,
+                question: inputText.value,
+            }),
         })
-        .catch(function (error) {
-            console.error(error);
-        });
+            .then(function () {
+                let successfulSubmit = `<p id="inputSuccess">Tu consulta se envió correctamente.</p><p>Si tenés otra duda o pregunta, volvé a completar el formulario.</p>`;
+                document.getElementById("contactMessage").innerHTML = successfulSubmit;
+                inputText.value = "";
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+    else {
+        let unsuccessfulSubmit = `<p id="inputError">Para poder enviar tu consulta, todos los campos tienen que estar completos y la dirección de correo electrónico tiene que ser válida.</p>`;
+        document.getElementById("contactMessage").innerHTML = unsuccessfulSubmit;
+    }
+
 });
 
 $("#clearBtn").click(clearCart);

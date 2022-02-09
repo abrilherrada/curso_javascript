@@ -150,6 +150,14 @@ nav {
   text-align: center;
 }
 
+.form #contactMessage #inputError {
+  color: #E63946;
+}
+
+.form #contactMessage #inputSuccess {
+  color: green;
+}
+
 .formInputs {
   width: 100%;
   margin-bottom: 1rem;
