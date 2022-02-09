@@ -1,17 +1,9 @@
 /**
- * @challenge:
- * DESAFÍO:
- * Tomando como ejemplo la llamada AJAX con JSON, incorpora al proyecto del simulador al menos una llamada AJAX, que mediante la interacción del usuario (un botón o envío de formulario), se realice la llamada y la misma responda un JSON estático. incluir esa respuesta en el HTML.
+ * @challenge: PROYECTO FINAL
  * 
- * TERCERA PREENTREGA:
- *  - Maquetación del HTML y eventos a manejar en él.
- *  - Incorporación de jQuery para acceder y agregar elementos al DOM.
- *  - Implementación de efectos y animaciones. 
- *  - Estilos base CSS del simulador.
- * 
- * @version: 1.11.0
+ * @version: 2.0.0
  * @author: Abril Herrada
- * @date: 20/01/2022
+ * @date: 09/02/2022
  *
  * History:
  *  - v1.0.0: Primera entrega (Sintaxis y variables)
@@ -26,6 +18,7 @@
  *  - v1.9.0: Décima entrega (jQuery: selectores y eventos)
  *  - v1.10.0: Decimoprimera entrega (jQuery: efectos y animaciones)
  *  - v1.11.0: Decimosegunda entrega (AJAX, Tercera preentrega)
+ *  - v2.0.0: Decimotercera entrega (Proyecto final)
  */
 
 //CLASE DE PRODUCTOS EN CARRITO
@@ -64,11 +57,22 @@ let closeModal2 = document.getElementsByClassName("close")[1];
 let invalidModal = document.getElementById("invalidModal");
 let closeModal3 = document.getElementsByClassName("close")[2];
 
+//Variables para el modal de contacto, el botón de contacto y el botón de cerrar el modal de contacto.
+let formModal = document.getElementById("formModal");
+let formBtn = document.getElementById("formBtn");
+let closeModal4 = document.getElementsByClassName("close")[3];
+
 //Variables para las pestañas de productos filtrados.
 let allTab = document.getElementById("tab1");
 let outdoorsTab = document.getElementById("tab2");
 let homeTab = document.getElementById("tab3");
 let toysTab = document.getElementById("tab4");
+
+//Variables para el botón Enviar del formulario y los diferentes campos del formulario.
+let sendFormBtn = document.getElementById("sendFormBtn");
+let inputName = document.getElementById("inputName");
+let inputMail = document.getElementById("inputMail");
+let inputText = document.getElementById("inputText");
 
 //FUNCIONES
 //Función que genera el código HTML de las cartas de productos en función de la categoría seleccionada y hace una llamada a la función que genera los addEventListener de los botones Agregar.
@@ -83,16 +87,16 @@ const productCards = (productCategory) => {
     filteredProducts.forEach(item => {
         $("#productCards").append(`<div class="col mb-5">
                                     <div class="card h-100">
-                                        <img class="card-img-top img-product" src="./media/p${item.id}.jpg" alt="${item.name}" />
+                                        <img class="card-img-top productImg" src="./media/p${item.id}.jpg" alt="${item.name}" />
                                         <div class="card-body p-4">
                                             <div class="text-center">
                                                 <h5 class="fw-bolder">${item.name}</h5>
                                                 <p class="card-text">$${item.price}</p>
-                                                <p class="card-text description-product">${item.description}</p>
+                                                <p class="card-text productDescription">${item.description}</p>
                                             </div>
                                         </div>
-                                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-between">
-                                            <input id="productQuantity${item.id}" type="number" value=0 min="1" max="${item.stock}" class="mb-3 input-quantity m-1">
+                                        <div class="card-footer p-4 pt-0 pb-0 border-top-0 bg-transparent d-flex justify-content-between">
+                                            <input id="productQuantity${item.id}" type="number" value=0 min="1" max="${item.stock}" class="mb-3 inputQuantity m-1">
                                             <div class="text-center"><button data-productid="${item.id}" class="btn btn-outline-dark m-1 addBtn">Agregar</button></div>
                                         </div>
                                     </div>
@@ -340,6 +344,7 @@ closeModal1.addEventListener("click", () => {
 payBtn.addEventListener("click", () => {
     payModal.className = "popUp shown";
     cartModal.className = "popUp hidden";
+    //Hice la siguiente actualización del stock del array productos (que se obtienen de un JSON) para simular de forma local como sería si se actualizara el stock en el backend cuando el usuario termina la compra (si el mismo usuario realiza otra compra, hay menos productos disponibles).
     cart.forEach(item => {
         products[item.id - 1].stock = parseInt(products[item.id - 1].stock) - item.quantity;
     });
@@ -355,7 +360,15 @@ closeModal3.addEventListener("click", () => {
     invalidModal.className = "popUp hidden";
 });
 
-allTab.addEventListener("click",  () => {
+formBtn.addEventListener("click", () => {
+    formModal.className = "popUp shown";
+});
+
+closeModal4.addEventListener("click", () => {
+    formModal.className = "popUp hidden";
+});
+
+allTab.addEventListener("click", () => {
     productCards("todos");
 });
 
@@ -372,5 +385,29 @@ toysTab.addEventListener("click", () => {
 });
 
 purchaseSummary();
+
+sendFormBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    fetch("https://submit-form.com/71s1hALW", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            name: inputName.value,
+            email: inputMail.value,
+            question: inputText.value,
+        }),
+    })
+        .then(function () {
+            let successfulSubmit = `<p>Tu consulta se envió correctamente.</p><p>Si tenés otra duda o pregunta, volvé a completar el formulario.</p>`;
+            document.getElementById("contactMessage").innerHTML = successfulSubmit;
+            inputText.value = "";
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+});
 
 $("#clearBtn").click(clearCart);

@@ -26,12 +26,12 @@
                 <h1 class="visually-hidden">Toys 4 paws</h1>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contacto</a></li>
-                    </ul>
-                    <form class="d-flex">
-                        <button id="cartBtn" class="btn btn-outline-dark" type="button">
+                    <form>
+                        <button id="formBtn" class="btn btn-outline-dark m-3" type="button">
+                            <i class="fas fa-paper-plane me-1"></i>
+                            Contacto
+                        </button>
+                        <button id="cartBtn" class="btn btn-outline-dark m-3" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Carrito
                             <span id="badge" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -39,7 +39,7 @@
                     </form>
                 </div>
             </div>
-        </nav>
+        </nav>   
         <!-- Cart modal-->
         <div id="cartModal" class="popUp hidden">
             <div class="popUpContent">
@@ -80,33 +80,52 @@
                     <p>Ingresá una cantidad válida para agregar el producto al carrito.</p>
                 </div>
             </div>
-        </div>        
+        </div>     
+        <!--Contact Form-->
+        <div id="formModal" class="popUp hidden">
+            <div class="popUpContent">
+                <div class="popUpHeader">
+                    <h3 class="headerTitle">Contacto</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="popUpBody">
+                    <form class="form">
+                        <p id="contactMessage">Mandanos tu consulta y te responderemos tan pronto como podamos.</p>
+                        <input type="text" name="nombre" placeholder="Nombre Apellido" class="formInputs" id="inputName" required>
+                        <input type="email" name="correo" placeholder="correo@ejemplo.com" class="formInputs" id="inputMail" required>
+                        <textarea name="consulta" placeholder="Escribí tu duda acá." rows="5" class="formInputs" id="inputText" required></textarea>
+                        <div class="formBtns">
+                            <input type="reset" value="Borrar" class="btn" id="clearFormBtn">
+                            <input type="submit" value="Enviar" class="btn btn-outline-dark" id="sendFormBtn">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>   
         <!-- Hero-->
         <header class="container-fluid d-flex justify-content-start align-items-center w-100 hero">
             <div class="row">
-                <div class="hero__container">
-                    <h2 class="hero__title">Lo mejor para tu mejor amigo</h2>
+                <div class="heroContainer">
+                    <h2 class="heroTitle">Lo mejor para tu mejor amigo</h2>
                 </div>
             </div>
         </header>
         <!-- Section 1: Products-->
         <section class="py-5">
-            <h2 class="product-title">Productos</h2>
-            <p class="description">Encontrá todo lo que necesitás para tu peludito a continuación.</p>
-            <div class="tab-container">
-                <input type="radio" id="tab1" name="tab" class="tab-input" checked>
+            <h2 class="sectionTitle">Productos</h2>
+            <p class="sectionDescription">Encontrá todo lo que necesitás para tu peludito a continuación.</p>
+            <div class="tabContainer">
+                <input type="radio" id="tab1" name="tab" class="tabInput" checked>
                 <label for="tab1"><i class="fas fa-clipboard-list"></i> Todos</label>
-                <input type="radio" id="tab2" name="tab" class="tab-input">
+                <input type="radio" id="tab2" name="tab" class="tabInput">
                 <label for="tab2"><i class="fas fa-cloud-sun"></i> Paseos</label>
-                <input type="radio" id="tab3" name="tab" class="tab-input">
+                <input type="radio" id="tab3" name="tab" class="tabInput">
                 <label for="tab3"><i class="fas fa-home"></i> Hogar</label>
-                <input type="radio" id="tab4" name="tab" class="tab-input">
+                <input type="radio" id="tab4" name="tab" class="tabInput">
                 <label for="tab4"><i class="fas fa-baseball-ball"></i> Juguetes</label>
-                <div class="content-container">
-                    <div class="content" id="c1">
-                        <div class="container px-4 px-lg-5 mt-5">
-                            <div id="productCards" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                            </div>
+                <div class="contentContainer">
+                    <div class="container px-4 px-lg-5 mt-5">
+                        <div id="productCards" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                         </div>
                     </div>
                 </div>
@@ -115,10 +134,10 @@
         <!-- Footer-->
         <footer class="py-5 footer">
             <div class="container d-flex justify-content-center">
-                <i class="fab fa-whatsapp footer__icono"></i>
-                <i class="fab fa-facebook-square footer__icono"></i>
-                <i class="fab fa-instagram footer__icono"></i>
-                <i class="fas fa-envelope footer__icono"></i>
+                <a href="https://wa.me/5492804604128"><i class="fab fa-whatsapp footerIcon"></i></a>
+                <a href="https://www.facebook.com"><i class="fab fa-facebook-square footerIcon"></i></a>
+                <a href="https://www.instagram.com"><i class="fab fa-instagram footerIcon"></i></a>
+                <a href="mailto:abrilherrada@gmail.com"><i class="fas fa-envelope footerIcon"></i></a>
             </div>
         </footer>
         <!-- Bootstrap core JS-->
